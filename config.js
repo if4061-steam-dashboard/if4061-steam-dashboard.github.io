@@ -11,7 +11,7 @@ const config = {
         top: 20,
         right: 40,
         bottom: 90,
-        left: 60
+        left: 100
     },
     lineChart: {
         width: 720,
