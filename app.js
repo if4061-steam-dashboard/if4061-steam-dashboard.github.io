@@ -1,19 +1,7 @@
-const aggregated_dataset_path = config.dataset.aggregatedPath;
-
 const svgWidth = config.barChart.svgWidth;
 const svgHeight = config.barChart.svgHeight;
-const lineWidth = config.lineChart.width;
-const lineHeight = config.lineChart.height;
-const lineMargin = config.margin;
-
 const graph = d3.select("#bar-chart")
    .attr("width", svgWidth).attr("height", svgHeight);
-const lineChart = d3.select("#line-chart")
-    .attr("width", lineWidth).attr("height", lineHeight)
-    .append("svg")
-        .attr("width", lineWidth).attr("height", lineHeight)
-    .append("g")
-        .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
 
 const genreDropdown = d3.select("#genre-dropdown");
 config.genres.forEach(genre => {
@@ -74,6 +62,7 @@ function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
     let maxPlayerBase = 0.1;
 
     const bars = [];
+    const aggregated_dataset_path = config.dataset.aggregatedPath;
     d3.csv(aggregated_dataset_path, (d, i) => {
         const genre = d[genreAttribute];
 
@@ -131,90 +120,25 @@ function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
     });
 }
 
-// dummy data
-const dataset = [
-    { date: new Date("2022-01-01"), value: 200 },
-    { date: new Date("2022-02-01"), value: 250 },
-    { date: new Date("2022-03-01"), value: 180 },
-    { date: new Date("2022-04-01"), value: 300 },
-    { date: new Date("2022-05-01"), value: 280 },
-    { date: new Date("2022-06-01"), value: 220 },
-    { date: new Date("2022-07-01"), value: 300 },
-    { date: new Date("2022-08-01"), value: 450 },
-    { date: new Date("2022-09-01"), value: 280 },
-    { date: new Date("2022-10-01"), value: 600 },
-    { date: new Date("2022-11-01"), value: 780 },
-    { date: new Date("2022-12-01"), value: 320 }
-];
-
-function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
-    
-    if (genre != "") {
-        throw Error("Not implemented yet.")
-    }
-
-    if ((!config.timeAttributes.includes(startTimeAttribute)) || (!config.timeAttributes.includes(endTimeAttribute))) {
-        throw Error("Unexpected attribute in startTimeAttribute/endTimeAttribute")
-    }
-
-    const x = d3.scaleTime()
-        .range([0, lineWidth - lineMargin.left - lineMargin.right]);
-
-    const y = d3.scaleLinear()
-        .range([lineHeight - lineMargin.top - lineMargin.bottom, 0]);
-
-    
-    x.domain(d3.extent(dataset, d => d.date));
-    y.domain([0, d3.max(dataset, d => d.value)]);
-
-    lineChart
-        .append("svg")
-            .attr("width", lineWidth).attr("height", lineHeight)
-        .append("g")
-            .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
-    
-    lineChart.append("g")
-        .attr("transform", `translate(0, ${lineHeight - lineMargin.top - lineMargin.bottom})`)
-        .call(d3.axisBottom(x)
-            .ticks(d3.timeMonth.every(1))
-            .tickFormat(d3.timeFormat("%b %Y")))
-
-    lineChart.append("g")
-        .call(d3.axisLeft(y))
-
-    const line = d3.line()
-        .x(d => x(d.date))
-        .y(d => y(d.value));
-
-    lineChart.append("path")
-        .datum(dataset)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1)
-        .attr("d", line);
-
-}
-
 const genreDropdownElement = document.getElementById("genre-dropdown");
 const startTimeDropdownElement = document.getElementById("start-time-dropdown");
 const endTimeDropdownElement = document.getElementById("end-time-dropdown");
 
 genreDropdown.on("change", () => {
-    makeChartFromDropdownCurrentValues();
+    makeBarChartFromDropdownCurrentValues();
 });
 startTimeDropdown.on("change", () => {
-    makeChartFromDropdownCurrentValues();
+    makeBarChartFromDropdownCurrentValues();
 });
 endTimeDropdown.on("change", () => {
-    makeChartFromDropdownCurrentValues();
+    makeBarChartFromDropdownCurrentValues();
 });
 
-function makeChartFromDropdownCurrentValues() {
+function makeBarChartFromDropdownCurrentValues() {
     const genre = getValueFromDropdownElement(genreDropdownElement);
     const startTime = getValueFromDropdownElement(startTimeDropdownElement);
     const endTime = getValueFromDropdownElement(endTimeDropdownElement);
     makeBarChart(genre, startTime, endTime);
-    makeLineChart(genre, startTime, endTime);
 }
 
 function getValueFromDropdownElement(element) {
@@ -224,4 +148,5 @@ function getValueFromDropdownElement(element) {
     return value;
 }
 
-makeChartFromDropdownCurrentValues();
+makeBarChartFromDropdownCurrentValues();
+
