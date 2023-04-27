@@ -163,36 +163,60 @@ function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
     const y = d3.scaleLinear()
         .range([lineHeight - lineMargin.top - lineMargin.bottom, 0]);
 
-    
-    x.domain(d3.extent(dataset, d => d.date));
-    y.domain([0, d3.max(dataset, d => d.value)]);
+    d3.csv(aggregated_dataset_path, (d, i) => {
+        // const genre = d[genreAttribute];
+        // console.log(d.genre);
 
-    lineChart
-        .append("svg")
-            .attr("width", lineWidth).attr("height", lineHeight)
-        .append("g")
-            .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
-    
-    lineChart.append("g")
-        .attr("transform", `translate(0, ${lineHeight - lineMargin.top - lineMargin.bottom})`)
-        .call(d3.axisBottom(x)
-            .ticks(d3.timeMonth.every(1))
-            .tickFormat(d3.timeFormat("%b %Y")))
+        // ganti ke genre relevan
+        if (d.genre != "Action") {return;}
+        
+        let displayedData = {};
+        // let pick = false;
+        config.timeAttributes.forEach(timeAttribute => {
+            // if ((!pick) && timeAttribute == startTimeAttribute) {
+            //     pick = true;
+            // }
 
-    lineChart.append("g")
-        .call(d3.axisLeft(y))
+            // if (pick) {
+                displayedData[timeAttribute] = parseFloat(d[timeAttribute]);
+            // }
+            
+            // if (pick && timeAttribute == endTimeAttribute) {
+            //     pick = false;
+            // }
+        });
 
-    const line = d3.line()
-        .x(d => x(d.date))
-        .y(d => y(d.value));
+        console.log(displayedData.value);
 
-    lineChart.append("path")
-        .datum(dataset)
-        .attr("fill", "none")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1)
-        .attr("d", line);
+        x.domain(d3.extent( Object.keys(displayedData)));
+        y.domain([0, d3.max( Object.values(displayedData))]);
 
+        lineChart
+            .append("svg")
+                .attr("width", lineWidth).attr("height", lineHeight)
+            .append("g")
+                .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
+        
+        lineChart.append("g")
+            .attr("transform", `translate(0, ${lineHeight - lineMargin.top - lineMargin.bottom})`)
+            .call(d3.axisBottom(x)
+                .ticks(d3.timeMonth.every(1))
+                .tickFormat(d3.timeFormat("%b %Y")))
+
+        lineChart.append("g")
+            .call(d3.axisLeft(y))
+
+        const line = d3.line()
+            .x(d => x(d.date))
+            .y(d => y(d.value));
+
+        lineChart.append("path")
+            .datum(displayedData)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1)
+            .attr("d", line);
+    });
 }
 
 const genreDropdownElement = document.getElementById("genre-dropdown");
