@@ -165,31 +165,31 @@ function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
 
     d3.csv(aggregated_dataset_path, (d, i) => {
         // const genre = d[genreAttribute];
-        // console.log(d.genre);
 
         // ganti ke genre relevan
         if (d.genre != "Action") {return;}
         
-        let displayedData = {};
-        // let pick = false;
-        config.timeAttributes.forEach(timeAttribute => {
-            // if ((!pick) && timeAttribute == startTimeAttribute) {
-            //     pick = true;
-            // }
+        let displayedData = [];
+        let pick = false;
 
-            // if (pick) {
-                displayedData[timeAttribute] = parseFloat(d[timeAttribute]);
-            // }
+        config.timeAttributes.forEach(timeAttribute => {
+            if ((!pick) && timeAttribute == startTimeAttribute) {
+                pick = true;
+            }
+
+            if (pick) {
+                displayedData.push({ date: timeAttribute, value: parseFloat(d[timeAttribute]) });
+            }
             
-            // if (pick && timeAttribute == endTimeAttribute) {
-            //     pick = false;
-            // }
+            if (pick && timeAttribute == endTimeAttribute) {
+                pick = false;
+            }
         });
 
-        console.log(displayedData.value);
+        console.log(displayedData);
 
-        x.domain(d3.extent( Object.keys(displayedData)));
-        y.domain([0, d3.max( Object.values(displayedData))]);
+        x.domain(d3.extent(displayedData, d => d.date));
+        y.domain([0, d3.max(displayedData, d => d.value)]);
 
         lineChart
             .append("svg")
