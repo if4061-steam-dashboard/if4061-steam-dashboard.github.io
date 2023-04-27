@@ -11,18 +11,6 @@ const config = {
         aggregatedPath: "data/aggr_genre_sum.csv"
     },
     timeAttributes: [
-        "January 2018",
-        "February 2018",
-        "March 2018",
-        "April 2018",
-        "May 2018",
-        "June 2018",
-        "July 2018",
-        "August 2018",
-        "September 2018",
-        "October 2018",
-        "November 2018",
-        "December 2018",
         "January 2019",
         "February 2019",
         "March 2019",
@@ -71,5 +59,16 @@ const config = {
         "October 2022",
         "November 2022",
         "December 2022"
+    ],
+    genres: [
+        "Action",
+        "Adventure",
+        "Casual",
+        "Education",
+        "RPG",
+        "Racing",
+        "Simulation",
+        "Sports",
+        "Strategy"
     ]
 }

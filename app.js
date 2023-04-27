@@ -1,10 +1,33 @@
 const svgWidth = config.barChart.svgWidth;
 const svgHeight = config.barChart.svgHeight;
-const graph = d3.select("body")
-   .append("svg").attr("width", svgWidth).attr("height", svgHeight);
+const graph = d3.select("#bar-chart")
+   .attr("width", svgWidth).attr("height", svgHeight);
+
+const genreDropdown = d3.select("#genre-dropdown");
+config.genres.forEach(genre => {
+    genreDropdown.append("option")
+        .attr("value", genre)
+        .text(genre);
+});
+
+const startTimeDropdown = d3.select("#start-time-dropdown");
+const endTimeDropdown = d3.select("#end-time-dropdown");
+config.timeAttributes.forEach((timeAttribute, index) => {
+    const startTimeOption = startTimeDropdown.append("option")
+        .attr("value", timeAttribute)
+        .text(timeAttribute);
+    const endTimeOption = endTimeDropdown.append("option")
+        .attr("value", timeAttribute)
+        .text(timeAttribute);
+
+    if (index == config.timeAttributes.length - 1) {
+        startTimeOption.attr("selected", true);
+        endTimeOption.attr("selected", true);
+    }
+});
 
 function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
-    if (genre != null) {
+    if (genre != "") {
         throw Error("Not implemented yet.")
     }
 
@@ -59,6 +82,10 @@ function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
             }
         });
 
+        if (pick) {
+            playerBase = 0.0;
+        }
+
         const newMaxPlayerBase = Math.max(playerBase, maxPlayerBase);
         if (newMaxPlayerBase != maxPlayerBase) {
             bars.forEach(bar => {
@@ -67,10 +94,6 @@ function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
             });
             maxPlayerBase = newMaxPlayerBase;
         }
-
-        console.log(genre);
-        console.log(playerBase);
-        console.log(maxPlayerBase);
 
         const bar = graph.append("g")
             .attr("playerBase", playerBase);
@@ -97,4 +120,33 @@ function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
     });
 }
 
-makeBarChart(null, "November 2021", "November 2022");
+const genreDropdownElement = document.getElementById("genre-dropdown");
+const startTimeDropdownElement = document.getElementById("start-time-dropdown");
+const endTimeDropdownElement = document.getElementById("end-time-dropdown");
+
+genreDropdown.on("change", () => {
+    makeBarChartFromDropdownCurrentValues();
+});
+startTimeDropdown.on("change", () => {
+    makeBarChartFromDropdownCurrentValues();
+});
+endTimeDropdown.on("change", () => {
+    makeBarChartFromDropdownCurrentValues();
+});
+
+function makeBarChartFromDropdownCurrentValues() {
+    const genre = getValueFromDropdownElement(genreDropdownElement);
+    const startTime = getValueFromDropdownElement(startTimeDropdownElement);
+    const endTime = getValueFromDropdownElement(endTimeDropdownElement);
+    makeBarChart(genre, startTime, endTime);
+}
+
+function getValueFromDropdownElement(element) {
+    const selectedIndex = element.selectedIndex;
+    const selectedOption = element.options[selectedIndex];
+    const value = selectedOption.value;
+    return value;
+}
+
+makeBarChartFromDropdownCurrentValues();
+
