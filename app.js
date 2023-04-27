@@ -443,16 +443,16 @@ const startTimeDropdownElement = document.getElementById("start-time-dropdown");
 const endTimeDropdownElement = document.getElementById("end-time-dropdown");
 
 genreDropdown.on("change", () => {
-    makeChartFromDropdownCurrentValues();
+    makeChartsFromDropdownCurrentValues();
 });
 startTimeDropdown.on("change", () => {
-    makeChartFromDropdownCurrentValues();
+    makeChartsFromDropdownCurrentValues();
 });
 endTimeDropdown.on("change", () => {
-    makeChartFromDropdownCurrentValues();
+    makeChartsFromDropdownCurrentValues();
 });
 
-function makeChartFromDropdownCurrentValues() {
+function makeChartsFromDropdownCurrentValues() {
     const genre = getValueFromDropdownElement(genreDropdownElement);
     const startTime = getValueFromDropdownElement(startTimeDropdownElement);
     const endTime = getValueFromDropdownElement(endTimeDropdownElement);
@@ -467,4 +467,5 @@ function getValueFromDropdownElement(element) {
     return value;
 }
 
-makeChartFromDropdownCurrentValues();
+makeChartsFromDropdownCurrentValues();
+
