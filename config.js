@@ -7,6 +7,16 @@ const config = {
         barSpace: 10,
         maxCount: 5
     },
+    margin: {
+        top: 20,
+        right: 40,
+        bottom: 90,
+        left: 100
+    },
+    lineChart: {
+        width: 720,
+        height: 300
+    },
     dataset: {
         aggregatedPath: "data/aggr_genre_sum.csv"
     },
