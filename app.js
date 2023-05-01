@@ -374,9 +374,9 @@ function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
             .style("font-size", "14px")
             .call(d3.axisLeft(y)
                 .ticks((d3.max(displayedData, d => d.value)) / 500000)
-            // .tickFormat(d => {
-            //     return `${(d / 1000).toFixed(0)}k`;
-            // })
+            .tickFormat(d => {
+                return `${(d / 1000).toFixed(0)}k`;
+            })
                 .tickSize(0)
                 .tickPadding(10))
             .call(g => g.select(".domain").remove()) 
