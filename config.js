@@ -9,12 +9,12 @@ const config = {
     },
     margin: {
         top: 20,
-        right: 40,
-        bottom: 120,
-        left: 60
+        right: 30,
+        bottom: 150,
+        left: 50
     },
     lineChart: {
-        width: 880,
+        width: 720,
         height: 320
     },
     dataset: {

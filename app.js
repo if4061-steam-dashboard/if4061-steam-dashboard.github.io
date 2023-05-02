@@ -131,22 +131,6 @@ function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
     });
 }
 
-// // dummy data
-// const dataset = [
-//     { date: new Date("2021-12-31"), value: 200 },
-//     { date: new Date("2022-02-01"), value: 250 },
-//     { date: new Date("2022-03-01"), value: 180 },
-//     { date: new Date("2022-04-01"), value: 300 },
-//     { date: new Date("2022-05-01"), value: 280 },
-//     { date: new Date("2022-06-01"), value: 220 },
-//     { date: new Date("2022-07-01"), value: 300 },
-//     { date: new Date("2022-08-01"), value: 450 },
-//     { date: new Date("2022-09-01"), value: 280 },
-//     { date: new Date("2022-10-01"), value: 600 },
-//     { date: new Date("2022-11-01"), value: 780 },
-//     { date: new Date("2022-12-01"), value: 320 }
-// ];
-
 // brute force baby :v
 function monthToDate(timeAttribute) {
 
@@ -308,10 +292,6 @@ function monthToDate(timeAttribute) {
 }
 
 function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
-    
-    if (genre != "") {
-        throw Error("Not implemented yet.")
-    }
 
     if ((!config.timeAttributes.includes(startTimeAttribute)) || (!config.timeAttributes.includes(endTimeAttribute))) {
         throw Error("Unexpected attribute in startTimeAttribute/endTimeAttribute")
@@ -325,20 +305,53 @@ function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
     const y = d3.scaleLinear()
         .range([lineHeight - lineMargin.top - lineMargin.bottom, 0]);
 
+    let displayedData = [];
+    
     d3.csv(aggregated_dataset_path, (d, i) => {
-        // ganti ke genre relevan
-        if (d.genre != "Action") {return;}
         
-        let displayedData = [];
-        let pick = false;
+        let allGenre = false;
+        if (genre == "") {
+            allGenre = true;
+        // ganti ke genre relevan
+        } else
+        if (d.genre != genre) {
+            return;
+        }
 
+        let pick = false;
+        let currentMonth;
+        let findIdx;
+        
         config.timeAttributes.forEach(timeAttribute => {
             if ((!pick) && timeAttribute == startTimeAttribute) {
                 pick = true;
             }
 
             if (pick) {
-                displayedData.push({ date: monthToDate(timeAttribute), value: parseFloat(d[timeAttribute]) });
+
+                currentMonth = monthToDate(timeAttribute);
+
+                let found = false;
+
+                
+                displayedData.every(function (value, i) {
+                    
+                    if (+value.date == +currentMonth) {
+                        found = true;
+                        findIdx = i;
+                        return false;
+                    }
+                    return true;
+                });
+
+                if (found)
+                {
+                    let val = displayedData[findIdx].value;
+                    displayedData[findIdx] = { date: currentMonth, value: val + parseFloat(d[timeAttribute]) };
+                } 
+                else {
+                    displayedData.push({ date: currentMonth, value: parseFloat(d[timeAttribute]) });
+                }
             }
             
             if (pick && timeAttribute == endTimeAttribute) {
@@ -346,95 +359,98 @@ function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
             }
         });
 
-        // console.log(displayedData);
+        console.log(!allGenre || (allGenre && d.genre == "Strategy"));
 
-        x.domain(d3.extent(displayedData, d => d.date));
-        y.domain([0, d3.max(displayedData, d => d.value)]);
+        if (!allGenre || (allGenre && d.genre == "Strategy")) {
 
-        lineChart
-            .append("svg")
-                .attr("width", lineWidth).attr("height", lineHeight)
-            .append("g")
-                .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
-        
-        lineChart.append("g")
-            .attr("transform", `translate(0, ${lineHeight - lineMargin.top - lineMargin.bottom})`)
-            .style("font-size", "12px")
-            .call(d3.axisBottom(x)
-                .ticks(d3.timeMonth.every(2))
-                .tickFormat(d3.timeFormat("%b %Y")))
-            .call(g => g.select(".domain").remove()) 
-            .selectAll(".tick line") 
-            .style("stroke-opacity", 0)
+            x.domain(d3.extent(displayedData, d => d.date));
+            y.domain([0, d3.max(displayedData, d => d.value)]);
 
-        lineChart.selectAll(".tick text")
-            .attr("fill", "#777");
+            lineChart
+                .append("svg")
+                    .attr("width", lineWidth).attr("height", lineHeight)
+                .append("g")
+                    .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
+            
+            lineChart.append("g")
+                .attr("transform", `translate(0, ${lineHeight - lineMargin.top - lineMargin.bottom})`)
+                .style("font-size", "10px")
+                .call(d3.axisBottom(x)
+                    .ticks(d3.timeMonth.every(1))
+                    .tickFormat(d3.timeFormat("%b %Y")))
+                .call(g => g.select(".domain").remove()) 
+                .selectAll(".tick line") 
+                .style("stroke-opacity", 0)
 
-        lineChart.append("g")
-            .style("font-size", "14px")
-            .call(d3.axisLeft(y)
-                .ticks((d3.max(displayedData, d => d.value)) / 500000)
-            .tickFormat(d => {
-                return `${(d / 1000).toFixed(0)}k`;
-            })
-                .tickSize(0)
-                .tickPadding(10))
-            .call(g => g.select(".domain").remove()) 
-            .selectAll(".tick text")
-            .style("fill", "#777") 
-            .style("visibility", (d, i, nodes) => {
-                if (i === 0) {
-                    return "hidden"; 
-                } else {
-                    return "visible"; 
-                }
-            });
+            lineChart.selectAll(".tick text")
+                .attr("fill", "#ffffff");
 
-        // Add vertical gridlines
-        lineChart.selectAll("xGrid")
-            .data(x.ticks().slice(1))
-            .join("line")
-            .attr("x1", d => x(d))
-            .attr("x2", d => x(d))
-            .attr("y1", 0)
-            .attr("y2", lineHeight - lineMargin.top - lineMargin.bottom)
-            .attr("stroke", "#e0e0e0")
-            .attr("stroke-width", .5);
+            lineChart.append("g")
+                .style("font-size", "12px")
+                .call(d3.axisLeft(y)
+                    .ticks((d3.max(displayedData, d => d.value)) / 1000000)
+                .tickFormat(d => {
+                    return `${(d / 1000000).toFixed(0)} Jt`;
+                })
+                    .tickSize(0)
+                    .tickPadding(10))
+                .call(g => g.select(".domain").remove()) 
+                .selectAll(".tick text")
+                .style("fill", "#ffffff") 
+                .style("visibility", (d, i, nodes) => {
+                    if (i === 0) {
+                        return "hidden"; 
+                    } else {
+                        return "visible"; 
+                    }
+                });
 
-        // // Add horizontal gridlines
-        lineChart.selectAll("yGrid")
-            .data(y.ticks((d3.max(displayedData, d => d.value)) / 500000).slice(1))
-            .join("line")
-            .attr("x1", 0)
-            .attr("x2", lineWidth)
-            .attr("y1", d => y(d))
-            .attr("y2", d => y(d))
-            .attr("stroke", "#e0e0e0")
-            .attr("stroke-width", .5)
+            // Add vertical gridlines
+            lineChart.selectAll("xGrid")
+                .data(x.ticks())
+                .join("line")
+                .attr("x1", d => x(d))
+                .attr("x2", d => x(d))
+                .attr("y1", 0)
+                .attr("y2", lineHeight - lineMargin.top - lineMargin.bottom)
+                .attr("stroke", "#e0e0e0")
+                .attr("stroke-width", .5);
 
-        // // Add Y-axis label
+            // // Add horizontal gridlines
+            lineChart.selectAll("yGrid")
+                .data(y.ticks((d3.max(displayedData, d => d.value)) / 1000000).slice(1))
+                .join("line")
+                .attr("x1", 0)
+                .attr("x2", lineWidth)
+                .attr("y1", d => y(d))
+                .attr("y2", d => y(d))
+                .attr("stroke", "#e0e0e0")
+                .attr("stroke-width", .5)
 
-        // lineChart.append("text")
-        //     .attr("transform", "rotate(-90)")
-        //     .attr("y", 0 - lineMargin.left)
-        //     .attr("x", 0 - ((lineHeight - lineMargin.top - lineMargin.bottom) / 2))
-        //     .attr("dy", "1em")
-        //     .style("text-anchor", "middle")
-        //     .style("font-size", "14px")
-        //     .style("fill", "#777")
-        //     .style("font-family", "sans-serif")
-        //     .text("Jumlah Pemain");
+            // // Add Y-axis label
 
-        const line = d3.line()
-            .x(d => x(d.date))
-            .y(d => y(d.value));
+            // lineChart.append("text")
+            //     .attr("transform", "rotate(-90)")
+            //     .attr("y", 0 - lineMargin.left)
+            //     .attr("x", 0 - ((lineHeight - lineMargin.top - lineMargin.bottom) / 2))
+            //     .attr("dy", "1em")
+            //     .style("text-anchor", "middle")
+            //     .style("font-size", "14px")
+            //     .style("fill", "#777")
+            //     .style("font-family", "sans-serif")
+            //     .text("Jumlah Pemain");
 
-        lineChart.append("path")
-            .datum(displayedData)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", 1)
-            .attr("d", line);
+            const line = d3.line()
+                .x(d => x(d.date))
+                .y(d => y(d.value));
+
+            lineChart.append("path")
+                .datum(displayedData)
+                .attr("fill", "none")
+                .attr("stroke", "#137EB0")
+                .attr("stroke-width", 1)
+                .attr("d", line);
+        }
     });
 }
 
