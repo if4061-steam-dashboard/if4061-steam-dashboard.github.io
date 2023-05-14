@@ -51,7 +51,13 @@
                 
                 <div class="charts">
                     <div>
-                        <svg class="bar-chart" id="bar-chart"></svg>
+                        <svg class="bar-chart" id="bar-chart-section" width="1200" height="450">
+                            <text id="bar-chart-title" x="0" y="0" fill="white" font-size="36px" dominant-baseline="hanging"></text>
+                            <g id="bar-chart-scaler" transform="scale(0.9, 0.9) translate(2, 82)">
+                                
+                            </g>
+                            <g id="bar-chart" transform="scale(0.9, 0.9) translate(2, 132)"></g>
+                        </svg>
                     </div>
 
                     <div>
@@ -62,7 +68,15 @@
 
             <script src="config.js"></script>
             <script src="app.js"></script>
-            
+            <script src="bar-chart/config.js"></script>
+            <script src="bar-chart/init.js"></script>
+            <script src="bar-chart/calculate-keyframes.js"></script>
+            <script src="bar-chart/make-enter-transition.js"></script>
+            <script src="bar-chart/make-exit-transition.js"></script>
+            <script src="bar-chart/make-direct-transition.js"></script>
+            <script src="bar-chart/make-bar-chart-transition.js"></script>
+            <script src="bar-chart/scaler.js"></script>
+            <script src="bar-chart/make-bar-chart-section-transition.js"></script>
         </div>
     </body>
 </html>

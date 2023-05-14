@@ -1,12 +1,4 @@
 const config = {
-    barChart: {
-        svgWidth: 880,
-        svgHeight: 400,
-        barWidth: 700,
-        barHeight: 25,
-        barSpace: 10,
-        maxCount: 5
-    },
     margin: {
         top: 20,
         right: 30,
