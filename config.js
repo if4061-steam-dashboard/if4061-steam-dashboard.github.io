@@ -10,7 +10,16 @@ const config = {
         height: 320
     },
     dataset: {
-        aggregatedPath: "data/aggr_genre_sum.csv"
+        aggregatedPath: "data/aggr_genre_sum.csv",
+        actionPath : "data/genres/action.csv",
+        adventurePath : "data/genres/adventure.csv",
+        casualPath : "data/genres/casual.csv",
+        educationPath : "data/genres/education.csv",
+        racingPath : "data/genres/racing.csv",
+        rpgPath : "data/genres/rpg.csv",
+        simulationPath : "data/genres/simulation.csv",
+        sportsPath : "data/genres/sports.csv",
+        strategyPath : "data/genres/strategy.csv"
     },
     timeAttributes: [
         "January 2019",
