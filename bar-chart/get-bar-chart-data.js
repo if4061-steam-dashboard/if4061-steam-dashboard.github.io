@@ -1,4 +1,5 @@
-function getBarChartData (genre, year, month) {
+async function getBarChartData (context) {
+    const { genre, year, month } = context;
     let path = "";
     switch (genre) {
         case "Action":
@@ -30,68 +31,39 @@ function getBarChartData (genre, year, month) {
             break;
     }
     if (path == ""){
-        return("Error. No genre inputted.");
+        throw ("Error. No genre inputted.");
     }
     //year input assumed to be be "2021", "2022" etc
     //month input assumed to be "February, January, March" just like in the csv
 
     let data = []
-    d3.csv(path, function(d) {
-        let  data0 = {
+    const monthAttributeMap = {
+        JAN: "January",
+        FEB: "February",
+        MAR: "March",
+        APR: "April",
+        MEI: "May",
+        JUN: "June",
+        JUL: "July",
+        AUG: "August",
+        SEP: "September",
+        OKT: "October",
+        NOV: "November",
+        DES: "December",
+    };
+    const monthAttribute = monthAttributeMap[month];
+
+    // TODO: Please give just top 5. :)
+    await d3.csv(path, function(d, index) {
+        if (index >= 5) return; // This is just a hotfix.
+        
+        let data0 = {
             "name": d["Name"],
-            "playerBaseMonthAverage": d[month.concat(" ", year)],
+            "playerBaseMonthAverage": d[monthAttribute.concat(" ", year)],
             "iconUrl": ""//idk how to get one, sorry :(
         }
         data.push(data0);
     });
 
-    let monthContext = "";
-        switch (month) {
-            case "January":
-                monthContext = "JAN";
-                break;
-            case "February":
-                monthContext = "FEB";
-                break;
-            case "March":
-                monthContext = "MAR";
-                break;
-            case "April":
-                monthContext = "APR";
-                break;
-            case "May":
-                monthContext = "MAY";
-                break;
-            case "June":
-                monthContext = "JUN";
-                break;
-            case "July":
-                monthContext = "JUL";
-                break;
-            case "August":
-                monthContext = "AUG";
-                break;
-            case "September":
-                monthContext = "SEP";
-                break;
-            case "October":
-                monthContext = "OCT";
-                break;
-            case "November":
-                monthContext = "NOV";
-                break;
-            case "December":
-                monthContext = "DEC";
-                break;
-        }
-
-    const state = {
-        "context" : {
-            "genre": genre,
-            "year": year,
-            "month": monthContext
-        },
-        "data" : data
-    };
-    return state;
+    return { context, data };
 }
