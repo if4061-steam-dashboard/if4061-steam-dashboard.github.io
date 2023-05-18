@@ -1,21 +1,16 @@
-const config = {
-    barChart: {
-        svgWidth: 880,
-        svgHeight: 400,
-        barWidth: 700,
-        barHeight: 25,
-        barSpace: 10,
-        maxCount: 5
+const lineChartConfig = {
+    origin: {
+        position: [5, 25] // x, y
     },
+    lineSvgWidth: 1200,
+    lineSvgHeight: 420,
+    lineBaseFontSize: 18,
+    transitionDuration: 2000,
     margin: {
-        top: 20,
-        right: 30,
-        bottom: 150,
-        left: 50
-    },
-    lineChart: {
-        width: 720,
-        height: 320
+        top: 0,
+        right: 40,
+        bottom: 40,
+        left: 80
     },
     dataset: {
         aggregatedPath: "data/aggr_genre_sum.csv"

@@ -55,12 +55,25 @@
                     </div>
 
                     <div>
-                        <svg class="line-chart" id="line-chart"></svg>
+                        <svg class="line-chart" id="line-chart-section" width="1200" height="450">
+                            <text id="line-chart-title" x="0" y="0" fill="white" font-size="36px" dominant-baseline="hanging"></text>
+                            <g id="line-chart-scaler" transform="scale(0.9, 0.9) translate(2, 82)">
+                                
+                            </g>
+                            <g id="line-chart" transform="scale(0.9, 0.9) translate(2, 132)"></g>
+                        </svg>
                     </div>
                 </div>
             </div>
 
             <script src="config.js"></script>
+
+            <script src="line-chart/config.js"></script>
+            <script src="line-chart/init.js"></script>
+            <script src="line-chart/month-to-date.js"></script>
+            <script src="line-chart/get-line-chart-data.js"></script>
+            <script src="line-chart/make-line-chart.js"></script>
+
             <script src="app.js"></script>
             
         </div>

@@ -7,18 +7,18 @@ const config = {
         barSpace: 10,
         maxCount: 5
     },
-    margin: {
-        top: 20,
-        right: 30,
-        bottom: 150,
-        left: 50
-    },
-    lineChart: {
-        width: 720,
-        height: 320
-    },
+    // margin: {
+    //     top: 20,
+    //     right: 30,
+    //     bottom: 150,
+    //     left: 50
+    // },
+    // lineChart: {
+    //     width: 720,
+    //     height: 320
+    // },
     dataset: {
-        aggregatedPath: "data/aggr_genre_sum.csv"
+        aggregatedPath: "../data/aggr_genre_sum.csv"
     },
     timeAttributes: [
         "January 2019",
