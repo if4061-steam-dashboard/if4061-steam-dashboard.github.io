@@ -34,7 +34,7 @@ async function getBarChartData (context) {
         throw ("Error. No genre inputted.");
     }
     //year input assumed to be be "2021", "2022" etc
-    //month input assumed to be "February, January, March" just like in the csv
+    //month input assumed to be JAN, FEB, MAR that can be mapped to attribute name in the csv
 
     let data = []
     const monthAttributeMap = {
