@@ -2,15 +2,15 @@ const lineChartConfig = {
     origin: {
         position: [5, 25] // x, y
     },
-    lineSvgWidth: 1200,
-    lineSvgHeight: 420,
+    lineSvgWidth: 1300,
+    lineSvgHeight: 480,
     lineBaseFontSize: 18,
     transitionDuration: 2000,
     margin: {
-        top: 0,
+        top: 60,
         right: 40,
-        bottom: 40,
-        left: 80
+        bottom: 60,
+        left: 100
     },
     dataset: {
         aggregatedPath: "data/aggr_genre_sum.csv"
