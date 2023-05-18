@@ -385,7 +385,7 @@ function makeChartsFromDropdownCurrentValues() {
     const month = getValueFromDropdownElement(monthDropdownElement);
     const year = getValueFromDropdownElement(yearDropdownElement);
     const context = { genre, month, year };
-
+    
     makeBarChartSectionTransition(context);
     makeLineChart(context);
 }

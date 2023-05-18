@@ -4,14 +4,14 @@ const barChartConfig = {
     },
     verticalSpace: 5,
     barHeight: 50,
-    maxWidth: 800,
+    maxWidth: 1200,
     iconContainerWidth: 45,
     iconSize: 25,
     labelContainerWidth: 200,
     svgHeight: 450,
     baseFontSize: 24,
     labelLeftMargin: 10,
-    transitionDuration: 2000
+    transitionDuration: 1000
 };
 
 const scalerConfig = {

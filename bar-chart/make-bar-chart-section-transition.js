@@ -17,10 +17,9 @@ function makeBarChartSectionTransition(context) {
         currentState = state;
         console.log(currentState);
 
-        // Make sure this is used for first time only, for testing
-        if (previousState !== null && previousState.context.genre === currentState.context.genre) return;
-
         makeBarChartTransition(previousState, currentState);
         makeScalerTransition(currentState.data[0].playerBaseMonthAverage);
+
+        previousState = currentState;
     });
 }

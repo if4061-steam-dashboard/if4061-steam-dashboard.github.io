@@ -1,6 +1,6 @@
 const barChartSection = d3.select("#bar-chart-section")
    .attr("preserveAspectRatio", "xMidYMid meet")
-   .attr("viewBox", "0 0 800 450");
+   .attr("viewBox", "0 0 1200 450");
 
 const barChart = barChartSection.select("#bar-chart");
 
