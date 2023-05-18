@@ -21,7 +21,7 @@ const config = {
         sportsPath : "data/genres/sports.csv",
         strategyPath : "data/genres/strategy.csv"
     },
-    timeAttributes: [
+    timeAttributes: [ // Deprecated, but still used.
         "January 2019",
         "February 2019",
         "March 2019",
@@ -81,5 +81,31 @@ const config = {
         "Simulation",
         "Sports",
         "Strategy"
-    ]
+    ],
+    month: {
+        data: [
+            "JAN",
+            "FEB",
+            "MAR",
+            "APR",
+            "MEI",
+            "JUN",
+            "JUL",
+            "AGU",
+            "SEP",
+            "OKT",
+            "NOV",
+            "DES",
+        ],
+        default: "DES"
+    },
+    year: {
+        data: [
+            "2019",
+            "2020",
+            "2021",
+            "2022"
+        ],
+        default: "2022"
+    }
 }
