@@ -7,11 +7,9 @@ const lineHeight = config.lineChart.height;
 const lineMargin = config.margin;
 
 const graph = d3.select("#bar-chart")
-   .attr("width", svgWidth).attr("height", svgHeight);
+    .attr("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
 const lineChart = d3.select("#line-chart")
-    .attr("width", lineWidth).attr("height", lineHeight)
-    .append("svg")
-        .attr("width", lineWidth).attr("height", lineHeight)
+    .attr("viewBox", `0 0 ${lineWidth} ${lineHeight}`)
     .append("g")
         .attr("transform", `translate(${lineMargin.left}, ${lineMargin.top})`);
 
@@ -22,23 +20,37 @@ config.genres.forEach(genre => {
         .text(genre);
 });
 
-const startTimeDropdown = d3.select("#start-time-dropdown");
-const endTimeDropdown = d3.select("#end-time-dropdown");
-config.timeAttributes.forEach((timeAttribute, index) => {
-    const startTimeOption = startTimeDropdown.append("option")
-        .attr("value", timeAttribute)
-        .text(timeAttribute);
-    const endTimeOption = endTimeDropdown.append("option")
-        .attr("value", timeAttribute)
-        .text(timeAttribute);
-
-    if (index == config.timeAttributes.length - 1) {
-        startTimeOption.attr("selected", true);
-        endTimeOption.attr("selected", true);
+const monthDropdown = d3.select("#month-dropdown");
+config.month.data.forEach(monthAttribute => {
+    const monthOption = monthDropdown.append("option")
+    .attr("value", monthAttribute)
+    .text(monthAttribute);
+    
+    if (monthAttribute == config.month.default) {
+        monthOption.attr("selected", true);
     }
 });
 
-function makeBarChart(genre, startTimeAttribute, endTimeAttribute) {
+const yearDropdown = d3.select("#year-dropdown");
+config.year.data.forEach(yearAttribute => {
+    const yearOption = yearDropdown.append("option")
+        .attr("value", yearAttribute)
+        .text(yearAttribute);
+
+    if (yearAttribute == config.year.default) {
+        yearOption.attr("selected", true);
+    }
+});
+
+function makeBarChart(context) {
+    const { genre, month, year } = context;
+
+    // TODO: Use month and year. This is just a placeholder to show the graphic.
+    // The real attributes that should be passed are genre, month, and year.
+    // Their values based on config.js, not CSV.
+    const startTimeAttribute = "January 2022";
+    const endTimeAttribute = "December 2022"; 
+
     if (genre != "") {
         throw Error("Not implemented yet.")
     }
@@ -291,7 +303,14 @@ function monthToDate(timeAttribute) {
     return date;
 }
 
-function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
+function makeLineChart(context) {
+    const { genre, month, year } = context;
+
+    // TODO: Use month and year. This is just a placeholder to show the graphic.
+    // The real attributes that should be passed are genre, month, and year.
+    // Their values based on config.js, not CSV.
+    const startTimeAttribute = "January 2022";
+    const endTimeAttribute = "December 2022"; 
 
     if ((!config.timeAttributes.includes(startTimeAttribute)) || (!config.timeAttributes.includes(endTimeAttribute))) {
         throw Error("Unexpected attribute in startTimeAttribute/endTimeAttribute")
@@ -455,25 +474,27 @@ function makeLineChart(genre, startTimeAttribute, endTimeAttribute) {
 }
 
 const genreDropdownElement = document.getElementById("genre-dropdown");
-const startTimeDropdownElement = document.getElementById("start-time-dropdown");
-const endTimeDropdownElement = document.getElementById("end-time-dropdown");
+const monthDropdownElement = document.getElementById("month-dropdown");
+const yearDropdownElement = document.getElementById("year-dropdown");
 
 genreDropdown.on("change", () => {
     makeChartsFromDropdownCurrentValues();
 });
-startTimeDropdown.on("change", () => {
+monthDropdown.on("change", () => {
     makeChartsFromDropdownCurrentValues();
 });
-endTimeDropdown.on("change", () => {
+yearDropdown.on("change", () => {
     makeChartsFromDropdownCurrentValues();
 });
 
 function makeChartsFromDropdownCurrentValues() {
     const genre = getValueFromDropdownElement(genreDropdownElement);
-    const startTime = getValueFromDropdownElement(startTimeDropdownElement);
-    const endTime = getValueFromDropdownElement(endTimeDropdownElement);
-    makeBarChart(genre, startTime, endTime);
-    makeLineChart(genre, startTime, endTime);
+    const month = getValueFromDropdownElement(monthDropdownElement);
+    const year = getValueFromDropdownElement(yearDropdownElement);
+    const context = { genre, month, year };
+
+    makeBarChart(context);
+    makeLineChart(context);
 }
 
 function getValueFromDropdownElement(element) {
@@ -484,4 +505,3 @@ function getValueFromDropdownElement(element) {
 }
 
 makeChartsFromDropdownCurrentValues();
-

@@ -1,62 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;800&display=swap');
+
 *{
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
+    font-family: Sora;
 }
 .main {
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
     margin: auto;
     position: relative;
     background: linear-gradient(to bottom, #1b2838, #66c0f4);
+    padding: 32px 128px;
 }
 .header {
-    width: 100%;
-    height: 5%;
-    padding-top: 5%;
+    /* height: 5%; */
+    /* padding-left: 10%; */
+    display: flex;
+    justify-content: space-between;
 }
+
 h1 {
     color: white;
-    text-align: center;
+    font-size: x-large;
+    /* text-align: center; */
+    align-self: flex-end;
 }
+
 label {
     color: white;
 }
+
 .contents {
-    width: 100%;
-    height: 95%;
-    padding: 2%;
-    padding-top: 0;
-    display: inline-block;
+    margin-top: 32px;
 }
 .interactibles {
-    width: 15%;
+    /* width: 15%;
     height: 70%;
-    padding: 5%;
-    display: inline-block;
-    background-color: #171a21;
+    padding: 5%; */
+    /* background-color: #171a21; */
+    display: flex;
+    gap: 16px;
 }
 .interactions {
-    padding: 5%;   
+    /* padding: 5%;    */
 }
-.charts {
-    width: 55%;
-    height: 70%;
-    padding: 5%;
-    display: inline-block;
+
+.chart-container {
+    padding: 16px;
+    border-radius: 16px;
+    background-color: rgba(0, 0, 0, 0.5);
 }
-.bar-chart {
-    width: 100%;
-    height: 80%;
-    padding: 5%;
-    display: inline-block;
-    background-color: #171a21;
-}
-.line-chart {
-    width: 100%;
-    height: 10%;
-    padding: 5%;
-    margin: auto;
-    display: inline-block;
-    background-color: #16222D; 
+
+.chart-container + .chart-container {
+    margin-top: 16px;
 }

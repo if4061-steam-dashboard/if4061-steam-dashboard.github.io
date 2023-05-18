@@ -1,7 +1,7 @@
 const config = {
     barChart: {
         svgWidth: 880,
-        svgHeight: 400,
+        svgHeight: 300,
         barWidth: 700,
         barHeight: 25,
         barSpace: 10,
@@ -20,7 +20,7 @@ const config = {
     dataset: {
         aggregatedPath: "data/aggr_genre_sum.csv"
     },
-    timeAttributes: [
+    timeAttributes: [ // Deprecated, but still used.
         "January 2019",
         "February 2019",
         "March 2019",
@@ -80,5 +80,31 @@ const config = {
         "Simulation",
         "Sports",
         "Strategy"
-    ]
+    ],
+    month: {
+        data: [
+            "JAN",
+            "FEB",
+            "MAR",
+            "APR",
+            "MEI",
+            "JUN",
+            "JUL",
+            "AGU",
+            "SEP",
+            "OKT",
+            "NOV",
+            "DES",
+        ],
+        default: "DES"
+    },
+    year: {
+        data: [
+            "2019",
+            "2020",
+            "2021",
+            "2022"
+        ],
+        default: "2022"
+    }
 }
