@@ -45,7 +45,7 @@ async function getBarChartData (context) {
         MEI: "May",
         JUN: "June",
         JUL: "July",
-        AUG: "August",
+        AGU: "August",
         SEP: "September",
         OKT: "October",
         NOV: "November",
@@ -55,15 +55,15 @@ async function getBarChartData (context) {
 
     // TODO: Please give just top 5. :)
     await d3.csv(path, function(d, index) {
-        if (index >= 5) return; // This is just a hotfix.
-        
         let data0 = {
             "name": d["Name"],
             "playerBaseMonthAverage": d[monthAttribute.concat(" ", year)],
-            "iconUrl": ""//idk how to get one, sorry :(
+            "iconUrl": d["Icon URL"] != "" ? d["Icon URL"] : barChartConfig.defaultIconUrl
         }
         data.push(data0);
     });
+    data.sort((a, b) => b.playerBaseMonthAverage - a.playerBaseMonthAverage);
+    data = data.slice(0, 5);
 
     return { context, data };
 }

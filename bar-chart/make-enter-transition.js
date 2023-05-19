@@ -10,54 +10,73 @@ function makeEnterTransition(state) {
             .attr("height", barChartConfig.barHeight)
             .attr("fill", "url(#barGradient)")
             .attr("x", 0)
-            .attr("y", keyframe.yPos)
-            .transition()
-            .attr("width", keyframe.width)
-            .duration(barChartConfig.transitionDuration);
+            .attr("y", keyframe.yPos);
 
         const barLabel = barArea.append("text");
         barLabel
-            .attr("x", keyframe.labelXPos - keyframe.width)
             .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
             .attr("opacity", 0)
             .attr("font-size", `${barChartConfig.baseFontSize}px`)
             .attr("text-anchor", "left")
             .attr("dominant-baseline", "middle")
-            .attr("fill", keyframe.labelColor)
             .text(keyframe.label);
-            
 
-        let currentFontSizePx = barChartConfig.baseFontSize; 
-        while (barLabel.node().getBBox().width > barChartConfig.labelContainerWidth && currentFontSizePx > 1) {
-            currentFontSizePx -= 1;
-            barLabel.attr("font-size", `${currentFontSizePx}px`);
-        }
-
-
-        barLabel
-            .transition()
-            .attr("x", keyframe.labelXPos)
-            .attr("opacity", 1)
-            .duration(barChartConfig.transitionDuration);
-
-        barArea.append("image")
+        const barIcon = barArea.append("image");
+        barIcon
             .attr("href", keyframe.iconUrl)
             .attr("height", barChartConfig.iconSize)
             .attr("width", barChartConfig.iconSize)
-            .attr("opacity", 0)
-            .attr("x", keyframe.iconXPos + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2 - keyframe.width)
             .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
-            .transition()
-            .attr("opacity", 1)
-            .attr("x", keyframe.iconXPos + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2)
-            .duration(barChartConfig.transitionDuration);
+            .attr("opacity", 0);
 
-        /* <image href="mdn_logo_only_color.png" height="200" width="200" /> */
+        const contentMargin = 10;
+        setTimeout(() => {
+            const barLabelWidth = barLabel.node().getComputedTextLength();
+            const labelXInsidePosition = keyframe.width - barChartConfig.iconContainerWidth - barLabelWidth - contentMargin;
+            if (labelXInsidePosition >= 0) {
+                barLabel
+                    .attr("fill", "black")
+                    .attr("x", labelXInsidePosition - keyframe.width)
+                    .transition()
+                    .attr("x", labelXInsidePosition)
+                    .attr("opacity", 1)
+                    .duration(barChartConfig.transitionDuration);
+
+                const iconXInsidePosition = keyframe.width - contentMargin - barChartConfig.iconContainerWidth + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2;
+                barIcon
+                    .attr("x", iconXInsidePosition - keyframe.width)
+                    .transition()
+                    .attr("x", iconXInsidePosition)
+                    .attr("opacity", 1)
+                    .duration(barChartConfig.transitionDuration);
+
+            } else {
+                barLabel
+                    .attr("fill", "white")
+                    .attr("x", contentMargin)
+                    .transition()
+                    .attr("x", contentMargin + keyframe.width)
+                    .attr("opacity", 1)
+                    .duration(barChartConfig.transitionDuration);
+
+                barIcon
+                    .attr("x", 2 * contentMargin + barLabelWidth)
+                    .transition()
+                    .attr("x", 2 * contentMargin + barLabelWidth + keyframe.width)
+                    .duration(barChartConfig.transitionDuration)
+                    .attr("opacity", 1);
+            }
+
+            barRectangle
+                .transition()
+                .attr("width", keyframe.width)
+                .duration(barChartConfig.transitionDuration);
+        }, 250);
     });
 
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve();
-        }, barChartConfig.transitionDuration)
+        }, barChartConfig.transitionDuration + 250)
     });
 }

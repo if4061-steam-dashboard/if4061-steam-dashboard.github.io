@@ -18,7 +18,9 @@ function makeBarChartSectionTransition(context) {
         console.log(currentState);
 
         makeBarChartTransition(previousState, currentState);
-        makeScalerTransition(currentState.data[0].playerBaseMonthAverage);
+
+        const maxPlayerBaseMonthAverage = Math.max(state.data[0].playerBaseMonthAverage, 5);
+        makeScalerTransition(maxPlayerBaseMonthAverage);
 
         previousState = currentState;
     });

@@ -13,17 +13,18 @@ function makeExitTransition(previousState) {
                 .attr("width", 0)
                 .duration(barChartConfig.transitionDuration);
 
-            barArea.select("text")
+            const barLabel = barArea.select("text");
+            barLabel
                 .transition()
-                .attr("x", keyframe.labelXPos - keyframe.width)
-                .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                .attr("x", barLabel.attr("x") - keyframe.width)
                 .attr("opacity", 0)
                 .duration(barChartConfig.transitionDuration);
 
-            barArea.select("image")
+            const barIcon = barArea.select("image");
+            barIcon
                 .transition()
                 .attr("opacity", 0)
-                .attr("x", keyframe.iconXPos + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2 - keyframe.width)
+                .attr("x", barIcon.attr("x") - keyframe.width)
                 .duration(barChartConfig.transitionDuration);
         }
     });

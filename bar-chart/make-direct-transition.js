@@ -1,6 +1,8 @@
 function makeDirectTransition(state) {
     const keyframeList = calculateKeyframes(state);
-    barChart.selectAll("g").attr("unused", "true");
+    const randomId = `${Math.random()}`.substring(2);
+    barChart.selectAll("g").attr("unused", randomId);
+    
 
     keyframeList.forEach(keyframe => {
         const id = keyframe.label.replace(/[^a-z]+/gi, "");
@@ -16,73 +18,119 @@ function makeDirectTransition(state) {
                 .attr("y", keyframe.yPos)
                 .duration(barChartConfig.transitionDuration);
 
-            barArea.select("text")
-                .transition()
-                .attr("x", keyframe.labelXPos)
-                .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
-                .attr("fill", keyframe.labelColor)
-                .duration(barChartConfig.transitionDuration);
+            const contentMargin = 10;
+            const barLabel = barArea.select("text")
+            const barIcon = barArea.select("image");
+            const barLabelWidth = barLabel.node().getComputedTextLength();
+            const labelXInsidePosition = keyframe.width - barChartConfig.iconContainerWidth - barLabelWidth - contentMargin;
+            if (labelXInsidePosition >= 0) {
+                barLabel
+                    .transition()
+                    .attr("fill", "black")
+                    .attr("x", labelXInsidePosition)
+                    .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                    .duration(barChartConfig.transitionDuration);
 
-            barArea.select("image")
-                .transition()
-                .attr("x", keyframe.iconXPos + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2)
-                .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
-                .duration(barChartConfig.transitionDuration);
+                const iconXInsidePosition = keyframe.width - contentMargin - barChartConfig.iconContainerWidth + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2;
+                barIcon
+                    .transition()
+                    .attr("x", iconXInsidePosition)
+                    .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+                    .duration(barChartConfig.transitionDuration);
+
+            } else {
+                barLabel
+                    .transition()
+                    .attr("fill", "white")
+                    .attr("x", contentMargin + keyframe.width)
+                    .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                    .duration(barChartConfig.transitionDuration);
+
+                barIcon
+                    .transition()
+                    .attr("x", 2 * contentMargin + barLabelWidth + keyframe.width)
+                    .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+                    .duration(barChartConfig.transitionDuration);
+            }
 
             barArea.attr("unused", null);
 
         } else {
+            const id = keyframe.label.replace(/[^a-z]+/gi, "");
             const barArea = barChart.append("g")
                 .attr("bar-id", id);
+
             const barRectangle = barArea.append("rect");
             barRectangle
                 .attr("width", keyframe.width)
                 .attr("height", barChartConfig.barHeight)
                 .attr("fill", "url(#barGradient)")
                 .attr("x", 0)
-                .attr("y", barChartConfig.svgHeight)
-                .transition()
-                .attr("y", keyframe.yPos)
-                .duration(barChartConfig.transitionDuration);
+                .attr("y", barChartConfig.svgHeight);
 
             const barLabel = barArea.append("text");
             barLabel
-                .attr("x", keyframe.labelXPos)
-                .attr("y", barChartConfig.svgHeight + barChartConfig.barHeight / 2)
+                .attr("opacity", 1)
                 .attr("font-size", `${barChartConfig.baseFontSize}px`)
                 .attr("text-anchor", "left")
                 .attr("dominant-baseline", "middle")
-                .attr("fill", keyframe.labelColor)
+                .attr("y", barChartConfig.svgHeight + barChartConfig.barHeight / 2)
                 .text(keyframe.label);
-    
-            let currentFontSizePx = barChartConfig.baseFontSize; 
-            while (barLabel.node().getBBox().width > barChartConfig.labelContainerWidth && currentFontSizePx > 1) {
-                currentFontSizePx -= 1;
-                barLabel.attr("font-size", `${currentFontSizePx}px`);
-            }
 
-            barLabel
-                .transition()
-                .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
-                .duration(barChartConfig.transitionDuration);
-
-            barArea.append("image")
+            const barIcon = barArea.append("image");
+            barIcon
+                .attr("opacity", 1)
                 .attr("href", keyframe.iconUrl)
                 .attr("height", barChartConfig.iconSize)
                 .attr("width", barChartConfig.iconSize)
-                .attr("opacity", 0)
-                .attr("x", keyframe.iconXPos + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2)
-                .attr("y", barChartConfig.svgHeight + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
-                .transition()
-                .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
-                .attr("opacity", 1)
-                .duration(barChartConfig.transitionDuration);
+                .attr("y", barChartConfig.svgHeight + (barChartConfig.barHeight - barChartConfig.iconSize) / 2);
+
+            const contentMargin = 10;
+            setTimeout(() => {
+                const barLabelWidth = barLabel.node().getComputedTextLength();
+                const labelXInsidePosition = keyframe.width - barChartConfig.iconContainerWidth - barLabelWidth - contentMargin;
+                if (labelXInsidePosition >= 0) {
+                    barLabel
+                        .attr("fill", "black")
+                        .attr("x", labelXInsidePosition)
+                        .transition()
+                        .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                        .duration(barChartConfig.transitionDuration);
+
+                    const iconXInsidePosition = keyframe.width - contentMargin - barChartConfig.iconContainerWidth + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2;
+                    barIcon
+                        .attr("x", iconXInsidePosition)
+                        .transition()
+                        .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+                        .duration(barChartConfig.transitionDuration);
+
+                } else {
+                    barLabel
+                        .attr("fill", "white")
+                        .attr("x", contentMargin + keyframe.width)
+                        .transition()
+                        .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                        .duration(barChartConfig.transitionDuration);
+
+                    barIcon
+                        .attr("x", 2 * contentMargin + barLabelWidth + keyframe.width)
+                        .transition()
+                        .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+                        .duration(barChartConfig.transitionDuration);
+                }
+
+                barRectangle
+                    .transition()
+                    .attr("width", keyframe.width)
+                    .attr("y", keyframe.yPos)
+                    .duration(barChartConfig.transitionDuration);
+            }, 250);
 
             barArea.attr("unused", null);
         }
     });
 
-    const unusedBarAreaList = barChart.selectAll("g[unused=true]");
+    const unusedBarAreaList = barChart.selectAll(`g[unused='${randomId}']`);
 
     const rect = unusedBarAreaList.select("rect");
 
@@ -96,9 +144,14 @@ function makeDirectTransition(state) {
         .attr("y", barChartConfig.svgHeight + barChartConfig.barHeight / 2)
         .duration(barChartConfig.transitionDuration);
 
+    unusedBarAreaList.select("image")
+        .transition()
+        .attr("y", barChartConfig.svgHeight + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+        .duration(barChartConfig.transitionDuration);
+
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            unusedBarAreaList.remove();
+            barChart.selectAll(`g[unused='${randomId}']`).remove();
             resolve();
         }, barChartConfig.transitionDuration)
     });

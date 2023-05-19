@@ -57,8 +57,9 @@ function getTicks(maxValue) {
 function makeScalerTransition(maxValue) {
     const ticks = getTicks(maxValue);
     const previousMaxValue = barChartScaler.attr("maxValue");
+    const randomId = `${Math.random()}`.substring(2);
 
-    barChartScaler.selectAll("g").attr("unused", true);
+    barChartScaler.selectAll("g").attr("unused", randomId);
     ticks.forEach(tick => {
         const oldBarChartTick = barChartScaler.select(`g[label='${tick.label}']`);
         let tickLine;
@@ -128,7 +129,7 @@ function makeScalerTransition(maxValue) {
             .duration(barChartConfig.transitionDuration);
     });
 
-    const unusedTicks = barChartScaler.selectAll("g[unused=true]");
+    const unusedTicks = barChartScaler.selectAll(`g[unused='${randomId}']`);
     unusedTicks.select("line")
         .datum(function() {
             return Math.min(parseFloat(this.getAttribute("x1")) * previousMaxValue / maxValue, maxWidth);
@@ -151,7 +152,7 @@ function makeScalerTransition(maxValue) {
     barChartScaler.attr("maxValue", maxValue);
     return new Promise(resolve => {
         setTimeout(() => {
-            unusedTicks.remove();
+            barChartScaler.selectAll(`g[unused='${randomId}']`).remove();
             resolve();
         }, barChartConfig.transitionDuration);
     });
