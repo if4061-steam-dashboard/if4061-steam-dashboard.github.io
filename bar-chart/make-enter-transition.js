@@ -1,7 +1,7 @@
 function makeEnterTransition(state) {
     const keyframes = calculateKeyframes(state);
     keyframes.forEach(keyframe => {
-        const id = keyframe.label.replace(/[^a-z]+/gi, "");
+        const id = keyframe.label.replace(/[^a-z0-9]+/gi, "");
         const barArea = barChart.append("g")
             .attr("bar-id", id);
         const barRectangle = barArea.append("rect");

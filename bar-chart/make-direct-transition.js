@@ -5,58 +5,61 @@ function makeDirectTransition(state) {
     
 
     keyframeList.forEach(keyframe => {
-        const id = keyframe.label.replace(/[^a-z]+/gi, "");
-        const barArea = barChart.select(`g[bar-id=${id}]`);
+        const id = keyframe.label.replace(/[^a-z0-9]+/gi, "");
+        const barArea = barChart.select(`g[bar-id='${id}']`);
         const barAreaSize = barArea.size();
         if (barAreaSize >= 1) {
             if (barAreaSize > 1) {
                 console.warn("Warning: unhandled duplicate bar-id");
             }
-            barArea.select("rect")
-                .transition()
-                .attr("width", keyframe.width)
-                .attr("y", keyframe.yPos)
-                .duration(barChartConfig.transitionDuration);
 
-            const contentMargin = 10;
-            const barLabel = barArea.select("text")
-            const barIcon = barArea.select("image");
-            const barLabelWidth = barLabel.node().getComputedTextLength();
-            const labelXInsidePosition = keyframe.width - barChartConfig.iconContainerWidth - barLabelWidth - contentMargin;
-            if (labelXInsidePosition >= 0) {
-                barLabel
+            setTimeout(() => {
+                barArea.select("rect")
                     .transition()
-                    .attr("fill", "black")
-                    .attr("x", labelXInsidePosition)
-                    .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                    .attr("width", keyframe.width)
+                    .attr("y", keyframe.yPos)
                     .duration(barChartConfig.transitionDuration);
 
-                const iconXInsidePosition = keyframe.width - contentMargin - barChartConfig.iconContainerWidth + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2;
-                barIcon
-                    .transition()
-                    .attr("x", iconXInsidePosition)
-                    .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
-                    .duration(barChartConfig.transitionDuration);
+                const contentMargin = 10;
+                const barLabel = barArea.select("text")
+                const barIcon = barArea.select("image");
+                const barLabelWidth = barLabel.node().getComputedTextLength();
+                const labelXInsidePosition = keyframe.width - barChartConfig.iconContainerWidth - barLabelWidth - contentMargin;
+                if (labelXInsidePosition >= 0) {
+                    barLabel
+                        .transition()
+                        .attr("fill", "black")
+                        .attr("x", labelXInsidePosition)
+                        .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                        .duration(barChartConfig.transitionDuration);
 
-            } else {
-                barLabel
-                    .transition()
-                    .attr("fill", "white")
-                    .attr("x", contentMargin + keyframe.width)
-                    .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
-                    .duration(barChartConfig.transitionDuration);
+                    const iconXInsidePosition = keyframe.width - contentMargin - barChartConfig.iconContainerWidth + (barChartConfig.iconContainerWidth - barChartConfig.iconSize) / 2;
+                    barIcon
+                        .transition()
+                        .attr("x", iconXInsidePosition)
+                        .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+                        .duration(barChartConfig.transitionDuration);
 
-                barIcon
-                    .transition()
-                    .attr("x", 2 * contentMargin + barLabelWidth + keyframe.width)
-                    .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
-                    .duration(barChartConfig.transitionDuration);
-            }
+                } else {
+                    barLabel
+                        .transition()
+                        .attr("fill", "white")
+                        .attr("x", contentMargin + keyframe.width)
+                        .attr("y", keyframe.yPos + barChartConfig.barHeight / 2)
+                        .duration(barChartConfig.transitionDuration);
+
+                    barIcon
+                        .transition()
+                        .attr("x", 2 * contentMargin + barLabelWidth + keyframe.width)
+                        .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
+                        .duration(barChartConfig.transitionDuration);
+                }
+            }, 250);
 
             barArea.attr("unused", null);
 
         } else {
-            const id = keyframe.label.replace(/[^a-z]+/gi, "");
+            const id = keyframe.label.replace(/[^a-z0-9]+/gi, "");
             const barArea = barChart.append("g")
                 .attr("bar-id", id);
 
@@ -153,6 +156,6 @@ function makeDirectTransition(state) {
         setTimeout(() => {
             barChart.selectAll(`g[unused='${randomId}']`).remove();
             resolve();
-        }, barChartConfig.transitionDuration)
+        }, barChartConfig.transitionDuration + 250)
     });
 }
