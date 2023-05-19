@@ -19,7 +19,8 @@ const config = {
         rpgPath : "data/genres/rpg.csv",
         simulationPath : "data/genres/simulation.csv",
         sportsPath : "data/genres/sports.csv",
-        strategyPath : "data/genres/strategy.csv"
+        strategyPath : "data/genres/strategy.csv",
+        allPath: "data/aggr_genre_sum.csv"
     },
     timeAttributes: [ // Deprecated, but still used.
         "January 2019",

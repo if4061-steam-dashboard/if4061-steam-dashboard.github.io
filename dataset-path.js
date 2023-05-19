@@ -8,3 +8,4 @@ const rpgDatasetPath = config.dataset.rpgPath;
 const simulationDatasetPath = config.dataset.simulationPath;
 const sportsDatasetPath = config.dataset.sportsPath;
 const strategyDatasetPath = config.dataset.strategyPath;
+const allDatasetPath = config.dataset.allPath;

@@ -29,6 +29,9 @@ async function getBarChartData (context) {
         case "Strategy":
             path = strategyDatasetPath;
             break;
+        case "":
+            path = allDatasetPath;
+            break;
     }
     if (path == ""){
         throw ("Error. No genre inputted.");
@@ -54,16 +57,28 @@ async function getBarChartData (context) {
     const monthAttribute = monthAttributeMap[month];
 
     // TODO: Please give just top 5. :)
-    await d3.csv(path, function(d, index) {
-        let data0 = {
-            "name": d["Name"],
-            "playerBaseMonthAverage": d[monthAttribute.concat(" ", year)],
-            "iconUrl": d["Icon URL"] != "" ? d["Icon URL"] : barChartConfig.defaultIconUrl
-        }
-        data.push(data0);
-    });
-    data.sort((a, b) => b.playerBaseMonthAverage - a.playerBaseMonthAverage);
-    data = data.slice(0, 5);
+    if (path != allDatasetPath) {
+        await d3.csv(path, function(d, index) {
+            let data0 = {
+                "name": d["Name"],
+                "playerBaseMonthAverage": d[monthAttribute.concat(" ", year)],
+                "iconUrl": d["Icon URL"] != "" ? d["Icon URL"] : barChartConfig.defaultIconUrl
+                }
+            data.push(data0);
+        });
+        data.sort((a, b) => b.playerBaseMonthAverage - a.playerBaseMonthAverage);
+        data = data.slice(0, 5);
+    }
+    else {
+        await d3.csv(path, function(d, index) {
+            let data0 = {
+                "name": d["genre"], //genre game
+                "playerBaseMonthAverage": d[monthAttribute.concat(" ", year)],
+                "iconUrl": d["Icon URL"] != "" ? d["Icon URL"] : barChartConfig.defaultIconUrl
+                }
+            data.push(data0);
+            });
+    }
 
     return { context, data };
 }
