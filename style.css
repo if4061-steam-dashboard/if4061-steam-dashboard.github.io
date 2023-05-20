@@ -63,6 +63,7 @@ label {
     display: none;
     opacity: .75;
     font-size: 12px;
+    z-index: 1;
 }
 
 @keyframes dash {
