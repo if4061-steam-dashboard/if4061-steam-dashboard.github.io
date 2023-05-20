@@ -25,7 +25,7 @@ function makeLineChart(context) {
         y.domain([0, d3.max(displayedData, d => d.value)]);
         
         // The X axis
-        lineChart.append("g")
+        const XAxis = lineChart.append("g")
             .attr("transform", `translate(0, ${lineHeight - lineMargin.top - lineMargin.bottom})`)
             .style("font-size", lineFontSize)
             .call(d3.axisBottom(x)
@@ -36,10 +36,11 @@ function makeLineChart(context) {
                 )
             .call(g => g.select(".domain").remove()) 
             .selectAll(".tick text")
-            .style("fill", "#e0e0e0");
+            .style("fill", "#e0e0e0")
+            .attr("opacity", 0);
 
         // The Y axis
-        lineChart.append("g")
+        const YAxis = lineChart.append("g")
             .style("font-size", lineFontSize + 4)
             .call(d3.axisLeft(y)
                 .ticks(8)
@@ -58,10 +59,11 @@ function makeLineChart(context) {
                 } else {
                     return "visible"; 
                 }
-            });
+            })
+            .attr("opacity", 0);
 
         // Add vertical gridlines
-        lineChart.selectAll("xGrid")
+        const XGrid = lineChart.selectAll("xGrid")
             .data(x.ticks())
             .join("line")
             .attr("x1", d => x(d))
@@ -69,10 +71,10 @@ function makeLineChart(context) {
             .attr("y1", 0)
             .attr("y2", lineHeight - lineMargin.top - lineMargin.bottom)
             .attr("stroke", "#e0e0e0")
-            .attr("stroke-width", .2);
+            .attr("stroke-width", 0);
 
         // // Add horizontal gridlines
-        lineChart.selectAll("yGrid")
+        const YGrid = lineChart.selectAll("yGrid")
             .data(y.ticks(8).slice(1))
             .join("line")
             .attr("x1", 0)
@@ -80,7 +82,7 @@ function makeLineChart(context) {
             .attr("y1", d => y(d))
             .attr("y2", d => y(d))
             .attr("stroke", "#e0e0e0")
-            .attr("stroke-width", .4)
+            .attr("stroke-width", 0)
 
         // Add Y-axis label
         lineChart.append("text")
@@ -108,24 +110,41 @@ function makeLineChart(context) {
             .x(d => x(d.date))
             .y(d => y(d.value));
 
-        var path = lineChart.append("path")
+        const path = lineChart.append("path")
             .datum(displayedData)
             .attr("d", line)
             .attr("stroke", "#137EB0")
             .attr("stroke-width", 4)
-            .attr("fill", "none");
+            .attr("fill", "none")
 
+        // For animating
+        XAxis
+            .transition()
+            .duration(600)
+                .attr("opacity", 1);
 
-        // // For animating, but sh*t doesn't work smh
-        // var totalLength = path.node().getTotalLength();
+        YAxis
+            .transition()
+            .duration(1200)
+                .attr("opacity", 1);
 
-        // path
-        //     .attr("stroke-dasharray", totalLength + " " + totalLength)
-        //     .attr("stroke-dashoffset", totalLength)
-        //     .transition()
-        //     .duration(2000)
-        //         .ease("linear")
-        //         .attr("stroke-dashoffset", 0);
+        XGrid
+            .transition()
+            .duration(2400)
+                .attr("stroke-width", .2);
+
+        YGrid
+            .transition()
+            .duration(1800)
+                .attr("stroke-width", .4);
+
+        var totalLength = path.node().getTotalLength();
+        path
+            .attr("stroke-dasharray", totalLength + " " + totalLength)
+            .attr("stroke-dashoffset", totalLength)
+            .transition()
+            .duration(2400)
+                .attr("stroke-dashoffset", 0);
 
         // Add a circle element
         const circle = lineChart.append("circle")

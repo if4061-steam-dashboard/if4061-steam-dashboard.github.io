@@ -81,3 +81,9 @@ rect {
     opacity: .75;
     font-size: 12px;
 }
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
