@@ -145,7 +145,9 @@ function makeLineChart(context) {
             .transition()
             .duration(2400)
                 .attr("stroke-dashoffset", 0);
+        //
 
+        // Tooltip
         // Add a circle element
         const circle = lineChart.append("circle")
             .attr("r", 0)
@@ -157,7 +159,11 @@ function makeLineChart(context) {
         // create a listening rectangle
         const listeningRect = lineChart.append("rect")
             .attr("width", lineWidth)
-            .attr("height", lineHeight);
+            .attr("height", lineHeight)
+            .attr("pointer-events", "all")
+            .attr("fill-opacity", "0")
+            .attr("stroke-opacity", "0")
+            .attr("z-index", "1");
 
         // create the mouse move function
         listeningRect.on("mousemove", function (event) {
@@ -196,6 +202,7 @@ function makeLineChart(context) {
 
             tooltip.style("display", "none");
         });
+        //
 
     });
 }
