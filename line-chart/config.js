@@ -7,10 +7,10 @@ const lineChartConfig = {
     lineBaseFontSize: 18,
     transitionDuration: 2000,
     margin: {
-        top: 60,
-        right: 40,
-        bottom: 60,
-        left: 100
+        top: 80,
+        right: 60,
+        bottom: 100,
+        left: 120
     },
     dataset: {
         aggregatedPath: "data/aggr_genre_sum.csv"

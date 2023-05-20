@@ -12,20 +12,12 @@ function makeLineChart(context) {
         .range([lineHeight - lineMargin.top - lineMargin.bottom, 20]);
 
     // Title
-    let title = "Playerbase Steam " + year;
+    let title = "Tren banyak pemain Steam • " + year;
     if (genre != "")    // If all genre selected, change if needed
     {
-        title = "Playerbase Steam genre " + genre + " " + year;
+        title = "Tren banyak pemain Steam • Genre " + genre + " • " + year;
     }
-    lineChart
-        .append("text")
-        .attr("class", "title")
-        .attr("x", (lineWidth - lineMargin.left - lineMargin.right) / 2)
-        .attr("y", 0 - lineMargin.top / 2)
-        .attr("text-anchor", "middle")
-        .style("font-size", lineFontSize * 2)
-        .style("fill", "#e0e0e0")
-        .text(title);
+    lineChartSection.select("#line-chart-title").text(title);
 
     getLineChartData(context).then(displayedData => {
         // Line chart scaling
@@ -50,7 +42,7 @@ function makeLineChart(context) {
         lineChart.append("g")
             .style("font-size", lineFontSize + 4)
             .call(d3.axisLeft(y)
-                .ticks(10)
+                .ticks(8)
                 .tickFormat(d => {
                     return `${(d / 1000000).toFixed(1)} Jt`;
                 })
@@ -81,7 +73,7 @@ function makeLineChart(context) {
 
         // // Add horizontal gridlines
         lineChart.selectAll("yGrid")
-            .data(y.ticks(10).slice(1))
+            .data(y.ticks(8).slice(1))
             .join("line")
             .attr("x1", 0)
             .attr("x2", lineWidth)
@@ -120,7 +112,7 @@ function makeLineChart(context) {
             .datum(displayedData)
             .attr("d", line)
             .attr("stroke", "#137EB0")
-            .attr("stroke-width", 2)
+            .attr("stroke-width", 4)
             .attr("fill", "none");
 
 
@@ -172,9 +164,9 @@ function makeLineChart(context) {
             // add in  our tooltip
             tooltip
                 .style("display", "block")
-                .style("left", `${Math.max(420, Math.min(780, xPos))}px`)
-                .style("top", `${lineHeight + lineMargin.top}px`)
-                .html(`<strong>Waktu:</strong> ${d.date.toLocaleDateString("id-ID",{month: "long", year: "numeric"})}<br><strong>Jumlah Pemain:</strong> ${d.value !== undefined ? (d.value / 1000000).toFixed(1) + ' Jt' : 'N/A'}`)
+                .style("left", `${Math.max(240, Math.min(1200, xPos + lineMargin.left))}px`)
+                .style("top", `${yPos + lineHeight + lineMargin.top + lineMargin.bottom + 40}px`)
+                .html(`<strong>Waktu:</strong> ${d.date.toLocaleDateString("id-ID",{month: "long", year: "numeric"})}<br><strong>Jumlah Pemain:</strong> ${d.value !== undefined ? (d.value).toLocaleString() : 'N/A'}`)
             });
 
         // listening rectangle mouse leave function
