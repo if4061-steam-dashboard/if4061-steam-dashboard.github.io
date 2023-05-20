@@ -14,8 +14,8 @@ function calculateKeyframes(state) {
                 while (hundredDigits.length < 3) {
                     hundredDigits = "0".concat(hundredDigits);
                 }
-                hundredDigits = ".".concat(hundredDigits)
-                labelValue = labelValue.concat(hundredDigits);
+                hundredDigits = ".".concat(hundredDigits);
+                labelValue = hundredDigits.concat(labelValue);
 
                 value = Math.floor(value / 1000);
             }
