@@ -84,6 +84,13 @@ function makeEnterTransition(state) {
         };
         barArea.on("mouseenter", showHint);
         barArea.on("mouseleave", hideHint);
+        if (state.context.genre == "") {
+            barArea.attr("cursor", "pointer");
+            barArea.on("click", function () {
+                genreDropdownElement.value = keyframe.label;
+                makeChartsFromDropdownCurrentValues();
+            });
+        }
 
         if (keyframe.width - barHintLabel.node().getComputedTextLength() < 0) {
             barHintLabel.attr("text-anchor", "start");

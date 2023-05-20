@@ -161,6 +161,14 @@ function makeDirectTransition(state) {
             barArea.on("mouseenter", showHint);
             barArea.on("mouseleave", hideHint);
 
+            if (state.context.genre == "") {
+                barArea.attr("cursor", "pointer");
+                barArea.on("click", function () {
+                    genreDropdownElement.value = keyframe.label;
+                    makeChartsFromDropdownCurrentValues();
+                });
+            }
+
             const contentMargin = 10;
             setTimeout(() => {
                 const barLabelWidth = barLabel.node().getComputedTextLength();
