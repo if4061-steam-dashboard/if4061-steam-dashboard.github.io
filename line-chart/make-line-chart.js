@@ -7,11 +7,12 @@ function makeLineChart(context) {
     {
         title = "Tren banyak pemain Steam • Genre " + genre + " • " + year;
     }
-    const lineChartTitle = lineChartSection.select("#line-chart-title");
-    const previousTitle = lineChartTitle.text();
+    const lineChartTitleElement = lineChartSection.select("#line-chart-title");
+    const previousTitle = lineChartTitleElement.text();
     
     if (previousTitle == title) return; // No need to transition, right?
-    typingAnimation(lineChartTitle, previousTitle, title);
+    lineChartTitleElement.text(title);
+    // typingAnimation(lineChartTitle, previousTitle, title);
 
     function typingAnimation(textElement, previousTitle, nextTitle) {
         let currentTitle = String(previousTitle);

@@ -17,7 +17,8 @@ function makeBarChartSectionTransition(context) {
     }
 
     if (previousTitle == nextTitle) return; // No need to transition, right?
-    typingAnimation(barChartTitle, previousTitle, nextTitle);
+    barChartTitle.text(nextTitle);
+    // typingAnimation(barChartTitle, previousTitle, nextTitle);
 
     
 
@@ -56,7 +57,7 @@ function makeBarChartSectionTransition(context) {
     
         textElement
             .transition()
-            .duration(50 * titleTransitions.length)
+            .duration(10 * titleTransitions.length)
             .ease(d3.easeLinear)
             .textTween(() => t => {
                 if (t < 1) {
