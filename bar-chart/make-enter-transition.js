@@ -3,6 +3,7 @@ function makeEnterTransition(state) {
     keyframes.forEach(keyframe => {
         const id = keyframe.label.replace(/[^a-z0-9]+/gi, "");
         const barArea = barChart.append("g")
+            .attr("class", "bar-area")
             .attr("bar-id", id);
         const barRectangle = barArea.append("rect");
         barRectangle
@@ -28,6 +29,65 @@ function makeEnterTransition(state) {
             .attr("width", barChartConfig.iconSize)
             .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
             .attr("opacity", 0);
+
+
+        /* <g id="bar-chart-tooltip" transform="scale(0.95, 0.95) translate(2, 82)">
+  <text opacity="1" fill="white" dominant-baseline="bottom" x="1200" text-anchor="end" y="-10" font-size="20px">629.325</text>
+  <line x1="1200" y1="0" x2="1200" y2="50" stroke="white" stroke-dasharray="5 5"></line>
+</g> */
+
+        const barHint = barArea.append("g")
+            .attr("class", "bar-hint");
+        const barHintLine = barHint.append("line");
+        barHintLine
+            .attr("x1", keyframe.width)
+            .attr("y1", -50)
+            .attr("x2", keyframe.width)
+            .attr("y2", keyframe.yPos)
+            .attr("stroke", "#83FF8F")
+            .attr("stroke-dasharray", "5 5")
+            .attr("stroke-width", "1.25")
+            .attr("opacity", 0)
+            .attr("class", "bar-hint-line");
+
+        const barHintLabel = barHint.append("text");
+        barHintLabel
+            .attr("fill", "white")
+            .attr("dominant-baseline", "bottom")
+            .attr("text-anchor", "end")
+            .attr("x", keyframe.width)
+            .attr("y", -60)
+            .attr("font-size", "20px")
+            .attr("opacity", 0)
+            .attr("class", "bar-hint-label")
+            .text(keyframe.labelValue);
+
+        const showHint = function () {
+            barHintLabel
+                .transition()
+                .attr("opacity", 1)
+                .duration(200);
+            barHintLine
+                .transition()
+                .attr("opacity", 1)
+                .duration(200);
+        };
+        const hideHint = function () {
+            barHintLabel
+                .transition()
+                .attr("opacity", 0)
+                .duration(200);
+            barHintLine
+                .transition()
+                .attr("opacity", 0)
+                .duration(200);
+        };
+        barArea.on("mouseenter", showHint);
+        barArea.on("mouseleave", hideHint);
+
+        if (keyframe.width - barHintLabel.node().getComputedTextLength() < 0) {
+            barHintLabel.attr("text-anchor", "start");
+        }
 
         const contentMargin = 10;
         setTimeout(() => {

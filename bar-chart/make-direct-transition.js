@@ -1,7 +1,7 @@
 function makeDirectTransition(state) {
     const keyframeList = calculateKeyframes(state);
     const randomId = `${Math.random()}`.substring(2);
-    barChart.selectAll("g").attr("unused", randomId);
+    barChart.selectAll("g.bar-area").attr("unused", randomId);
     
 
     keyframeList.forEach(keyframe => {
@@ -54,6 +54,25 @@ function makeDirectTransition(state) {
                         .attr("y", keyframe.yPos + (barChartConfig.barHeight - barChartConfig.iconSize) / 2)
                         .duration(barChartConfig.transitionDuration);
                 }
+
+                const barHint = barArea.select("g.bar-hint");
+                const barHintLine = barHint.select("line");
+                barHintLine
+                    .attr("x1", keyframe.width)
+                    .attr("x2", keyframe.width)
+                    .attr("y2", keyframe.yPos);
+
+                const barHintLabel = barHint.select("text");
+                barHintLabel
+                    .attr("x", keyframe.width)
+                    .text(keyframe.labelValue);
+
+                if (keyframe.width - barHintLabel.node().getComputedTextLength() < 0) {
+                    barHintLabel.attr("text-anchor", "start");
+                } else {
+                    barHintLabel.attr("text-anchor", "end");
+                }
+
             }, 250);
 
             barArea.attr("unused", null);
@@ -61,6 +80,7 @@ function makeDirectTransition(state) {
         } else {
             const id = keyframe.label.replace(/[^a-z0-9]+/gi, "");
             const barArea = barChart.append("g")
+                .attr("class", "bar-area")
                 .attr("bar-id", id);
 
             const barRectangle = barArea.append("rect");
@@ -87,6 +107,59 @@ function makeDirectTransition(state) {
                 .attr("height", barChartConfig.iconSize)
                 .attr("width", barChartConfig.iconSize)
                 .attr("y", barChartConfig.svgHeight + (barChartConfig.barHeight - barChartConfig.iconSize) / 2);
+
+            const barHint = barArea.append("g")
+                .attr("class", "bar-hint");
+            const barHintLine = barHint.append("line");
+            barHintLine
+                .attr("x1", keyframe.width)
+                .attr("y1", -50)
+                .attr("x2", keyframe.width)
+                .attr("y2", keyframe.yPos)
+                .attr("stroke", "#83FF8F")
+                .attr("stroke-dasharray", "5 5")
+                .attr("stroke-width", "1.25")
+                .attr("opacity", 0)
+                .attr("class", "bar-hint-line");
+    
+            const barHintLabel = barHint.append("text");
+            barHintLabel
+                .attr("fill", "white")
+                .attr("dominant-baseline", "bottom")
+                .attr("text-anchor", "end")
+                .attr("x", keyframe.width)
+                .attr("y", -60)
+                .attr("font-size", "20px")
+                .attr("opacity", 0)
+                .attr("class", "bar-hint-label")
+                .text(keyframe.labelValue);
+
+            if (keyframe.width - barHintLabel.node().getComputedTextLength() < 0) {
+                barHintLabel.attr("text-anchor", "start");
+            }
+    
+            const showHint = function () {
+                barHintLabel
+                    .transition()
+                    .attr("opacity", 1)
+                    .duration(200);
+                barHintLine
+                    .transition()
+                    .attr("opacity", 1)
+                    .duration(200);
+            };
+            const hideHint = function () {
+                barHintLabel
+                    .transition()
+                    .attr("opacity", 0)
+                    .duration(200);
+                barHintLine
+                    .transition()
+                    .attr("opacity", 0)
+                    .duration(200);
+            };
+            barArea.on("mouseenter", showHint);
+            barArea.on("mouseleave", hideHint);
 
             const contentMargin = 10;
             setTimeout(() => {
@@ -155,6 +228,7 @@ function makeDirectTransition(state) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             barChart.selectAll(`g[unused='${randomId}']`).remove();
+
             resolve();
         }, barChartConfig.transitionDuration + 250)
     });

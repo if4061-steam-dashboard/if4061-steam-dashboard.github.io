@@ -1,6 +1,51 @@
 function makeLineChart(context) {
     const { genre, year } = context;
 
+    // Title
+    let title = "Tren banyak pemain Steam • " + year;
+    if (genre != "")    // If all genre selected, change if needed
+    {
+        title = "Tren banyak pemain Steam • Genre " + genre + " • " + year;
+    }
+    const lineChartTitle = lineChartSection.select("#line-chart-title");
+    const previousTitle = lineChartTitle.text();
+    
+    if (previousTitle == title) return; // No need to transition, right?
+    typingAnimation(lineChartTitle, previousTitle, title);
+
+    function typingAnimation(textElement, previousTitle, nextTitle) {
+        let currentTitle = String(previousTitle);
+        
+        const titleTransitions = [currentTitle.concat("_")];
+        while (!nextTitle.startsWith(currentTitle)) {
+            currentTitle = currentTitle.substring(0, currentTitle.length - 1);
+            titleTransitions.push(currentTitle.concat("_"));
+        }
+        
+        /* Extra wait */
+        titleTransitions.push(currentTitle.concat("_"));
+        titleTransitions.push(currentTitle.concat("_"));
+        titleTransitions.push(currentTitle.concat("_"));
+
+        while (currentTitle != nextTitle) {
+            currentTitle = nextTitle.substring(0, currentTitle.length + 1);
+            titleTransitions.push(currentTitle.concat("_"));
+        }
+    
+        textElement
+            .transition()
+            .duration(50 * titleTransitions.length)
+            .ease(d3.easeLinear)
+            .textTween(() => t => {
+                if (t < 1) {
+                    const index = Math.floor(t * titleTransitions.length);
+                    return titleTransitions[index];
+                } else {
+                    return nextTitle;
+                }
+            });
+    }
+
     // Delete previous line chart
     lineChart.selectAll("*").remove();
 
@@ -10,14 +55,6 @@ function makeLineChart(context) {
 
     const y = d3.scaleLinear()
         .range([lineHeight - lineMargin.top - lineMargin.bottom, 20]);
-
-    // Title
-    let title = "Tren banyak pemain Steam • " + year;
-    if (genre != "")    // If all genre selected, change if needed
-    {
-        title = "Tren banyak pemain Steam • Genre " + genre + " • " + year;
-    }
-    lineChartSection.select("#line-chart-title").text(title);
 
     getLineChartData(context).then(displayedData => {
         // Line chart scaling

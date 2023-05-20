@@ -7,11 +7,27 @@ function calculateKeyframes(state) {
             const width = barChartConfig.maxWidth * d.playerBaseMonthAverage / maxPlayerBaseMonthAverage;
             const yPos = index * (barChartConfig.verticalSpace + barChartConfig.barHeight);
 
+            let labelValue = "";
+            let value = Math.round(d.playerBaseMonthAverage);
+            while (value >= 1000) {
+                let hundredDigits = String(value % 1000);
+                while (hundredDigits.length < 3) {
+                    hundredDigits = "0".concat(hundredDigits);
+                }
+                hundredDigits = ".".concat(hundredDigits)
+                labelValue = labelValue.concat(hundredDigits);
+
+                value = Math.floor(value / 1000);
+            }
+            /* value < 1000 */
+            labelValue = String(value).concat(labelValue);
+
             result.push({
                 label: d.name,
                 iconUrl: d.iconUrl,
                 yPos,
-                width
+                width,
+                labelValue
             });
         });
     }

@@ -42,9 +42,6 @@ label {
     display: flex;
     gap: 16px;
 }
-.interactions {
-    /* padding: 5%;    */
-}
 
 .chart-container {
     padding: 16px;
@@ -72,4 +69,17 @@ label {
     to {
         stroke-dashoffset: 0;
     }
+}
+
+footer {
+    font-size: small;
+    display: block;
+    background-color: #1b2838;
+    padding: 16px 64px;
+    color: white;
+    text-align: center;
+}
+
+footer a {
+    color: #66c0f4;
 }

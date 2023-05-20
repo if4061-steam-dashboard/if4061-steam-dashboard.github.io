@@ -2,7 +2,7 @@ function makeExitTransition(previousState) {
     const keyframeList = calculateKeyframes(previousState);
     keyframeList.forEach(keyframe => {
         const id = keyframe.label.replace(/[^a-z0-9]+/gi, "");
-        const barArea = barChart.select(`g[bar-id=${id}]`);
+        const barArea = barChart.select(`g[bar-id='${id}']`);
         const barAreaSize = barArea.size();
         if (barAreaSize >= 1) {
             if (barAreaSize > 1) {
