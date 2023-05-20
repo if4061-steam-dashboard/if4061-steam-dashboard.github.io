@@ -158,23 +158,23 @@ function makeLineChart(context) {
         // For animating
         XAxis
             .transition()
-            .duration(600)
+            .duration(1800)
                 .attr("opacity", 1);
 
         YAxis
             .transition()
-            .duration(1200)
+            .duration(600)
                 .attr("opacity", 1);
 
         XGrid
             .transition()
-            .duration(2400)
-                .attr("stroke-width", .2);
+            .duration(3600)
+                .attr("stroke-width", .15);
 
         YGrid
             .transition()
-            .duration(1800)
-                .attr("stroke-width", .4);
+            .duration(3000)
+                .attr("stroke-width", .5);
 
         var totalLength = path.node().getTotalLength();
         path
