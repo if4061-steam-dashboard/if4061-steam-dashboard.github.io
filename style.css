@@ -10,7 +10,8 @@
     height: 100%; */
     margin: auto;
     position: relative;
-    background: linear-gradient(to bottom, #1b2838, #66c0f4);
+    background: url(data/logos/steam_logo.png), linear-gradient(to bottom, #1b2838, #66c0f4);
+    background-size: cover;
     padding: 32px 128px;
 }
 .header {
