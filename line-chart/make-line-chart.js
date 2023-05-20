@@ -186,11 +186,11 @@ function makeLineChart(context) {
                 .duration(50)
                 .attr("r", 5);
 
-            // add in  our tooltip
+            // add in our tooltip
             tooltip
                 .style("display", "block")
-                .style("left", `${Math.max(240, Math.min(1200, xPos + lineMargin.left))}px`)
-                .style("top", `${yPos + lineHeight + lineMargin.top + lineMargin.bottom + 40}px`)
+                .style("left", `${ Math.max(240, Math.min(900, xPos + lineMargin.left)) * window.innerWidth/1200 }px`)
+                .style("top", `${ (yPos + lineHeight + lineMargin.top + lineMargin.bottom) * window.innerHeight/820 }px`)
                 .html(`<strong>Waktu:</strong> ${d.date.toLocaleDateString("id-ID",{month: "long", year: "numeric"})}<br><strong>Jumlah Pemain:</strong> ${d.value !== undefined ? (d.value).toLocaleString() : 'N/A'}`)
             });
 
