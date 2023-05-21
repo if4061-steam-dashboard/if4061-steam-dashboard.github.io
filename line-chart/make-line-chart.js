@@ -83,7 +83,8 @@ function makeLineChart(context) {
             .call(d3.axisLeft(y)
                 .ticks(8)
                 .tickFormat(d => {
-                    return `${(d / 1000000).toFixed(1)} Jt`;
+                    var i = d / 1000000
+                    return i > 0.02 ? `${i.toFixed(1)} Jt ` : `${(d / 1000).toFixed(1)} Rb `;
                 })
                 .tickSize(0)
                 .tickPadding(10)
@@ -211,7 +212,7 @@ function makeLineChart(context) {
             const i = bisectDate(displayedData, x0, 1);
             const d0 = displayedData[i - 1];
             const d1 = displayedData[i];
-            const d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+            const d = x0 - d0?.date > d1?.date - x0 ? d1 : d0;
             const xPos = x(d.date);
             const yPos = y(d.value);
 
@@ -229,7 +230,7 @@ function makeLineChart(context) {
                 .style("display", "block")
                 .style("left", `${ Math.max(240, Math.min(900, xPos + lineMargin.left)) * window.innerWidth/1200 }px`)
                 .style("top", `${ (yPos + lineHeight + lineMargin.top + lineMargin.bottom) * window.innerHeight/820 }px`)
-                .html(`<strong>Waktu:</strong> ${d.date.toLocaleDateString("id-ID",{month: "long", year: "numeric"})}<br><strong>Jumlah Pemain:</strong> ${d.value !== undefined ? (d.value).toLocaleString() : 'N/A'}`)
+                .html(`<strong>Waktu:</strong> ${d.date.toLocaleDateString("id-ID",{month: "long", year: "numeric"})}<br><strong>Jumlah Pemain:</strong> ${d.value !== undefined ? (d.value).toLocaleString('id-ID', { maximumFractionDigits: 0 }) : 'N/A'}`)
             });
 
         // listening rectangle mouse leave function
